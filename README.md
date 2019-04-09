@@ -28,4 +28,9 @@ Directory Structure
 Goals
 -----
 
-Make gosam and sam3 share a common(optional) configuration class
+  1. Make gosam and sam3 share a common(optional) configuration class
+  2. Make gosam and sam3 share a common(mandatory) key storage format inherited
+    from sam3
+  3. Make sam3 configuration much more intuitive, require less user input to
+    create a session
+  4. Have lots of examples and documentation
