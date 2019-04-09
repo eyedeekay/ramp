@@ -20,9 +20,11 @@ support for Contexts, etc.
 Directory Structure
 -------------------
 
-        ./        : Base Ramp classes, the things most will need to use
-        ./config  : Configuration classes to deal with compatibility issues
-        ./emit    : Takes a config file and uses it to send SAM commands
+        ./         : Base Ramp classes, the things most will need to use
+        ./config   : Configuration classes to deal with compatibility issues
+        ./emit     : Takes a config file and uses it to send SAM commands
+        ./examples : Usage examples
+        ./sam3     : Functional sam3 constructors
 
 Goals
 -----

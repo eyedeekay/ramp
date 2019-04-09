@@ -14,11 +14,12 @@ type I2PConfig struct {
 	SamPort string
 	TunName string
 
-    SamMin string
-    samMax string
+	SamMin string
+	SamMax string
 
 	Type string
 
+    SigType                   string
 	EncryptLeaseSet           string
 	LeaseSetKey               string
 	LeaseSetPrivateKey        string
@@ -116,6 +117,8 @@ func NewConfig(opts ...func(*I2PConfig) error) (*I2PConfig, error) {
 	var config I2PConfig
 	config.SamHost = "127.0.0.1"
 	config.SamPort = "7656"
+	config.SamMin = "3.0"
+	config.SamMax = "3.1"
 	config.TunName = "Ramp"
 	config.Type = "server"
 	config.InLength = "3"
