@@ -12,10 +12,10 @@ type Option func(*Ramp) error
 func SetType(s string) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if s == "http" {
-			c.Type = s
+			c.I2PConfig.Type = s
 			return nil
 		} else {
-			c.Type = "server"
+			c.I2PConfig.Type = "server"
 			return nil
 		}
 	}
@@ -24,7 +24,7 @@ func SetType(s string) func(*Ramp) error {
 //SetSAMHost sets the host of the Ramp's SAM bridge
 func SetSAMHost(s string) func(*Ramp) error {
 	return func(c *Ramp) error {
-		c.SamHost = s
+		c.I2PConfig.SamHost = s
 		return nil
 	}
 }
@@ -37,7 +37,7 @@ func SetSAMPort(s string) func(*Ramp) error {
 			return fmt.Errorf("Invalid SAM Port %s; non-number", s)
 		}
 		if port < 65536 && port > -1 {
-			c.SamPort = s
+			c.I2PConfig.SamPort = s
 			return nil
 		}
 		return fmt.Errorf("Invalid port")
@@ -47,7 +47,7 @@ func SetSAMPort(s string) func(*Ramp) error {
 //SetName sets the host of the Ramp's SAM bridge
 func SetName(s string) func(*Ramp) error {
 	return func(c *Ramp) error {
-		c.TunName = s
+		c.I2PConfig.TunName = s
 		return nil
 	}
 }
@@ -56,7 +56,7 @@ func SetName(s string) func(*Ramp) error {
 func SetInLength(u int) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if u < 7 && u >= 0 {
-			c.inLength = strconv.Itoa(u)
+			c.I2PConfig.InLength = strconv.Itoa(u)
 			return nil
 		}
 		return fmt.Errorf("Invalid inbound tunnel length")
@@ -67,7 +67,7 @@ func SetInLength(u int) func(*Ramp) error {
 func SetOutLength(u int) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if u < 7 && u >= 0 {
-			c.outLength = strconv.Itoa(u)
+			c.I2PConfig.OutLength = strconv.Itoa(u)
 			return nil
 		}
 		return fmt.Errorf("Invalid outbound tunnel length")
@@ -78,7 +78,7 @@ func SetOutLength(u int) func(*Ramp) error {
 func SetInVariance(i int) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if i < 7 && i > -7 {
-			c.inVariance = strconv.Itoa(i)
+			c.I2PConfig.InVariance = strconv.Itoa(i)
 			return nil
 		}
 		return fmt.Errorf("Invalid inbound tunnel length")
@@ -89,7 +89,7 @@ func SetInVariance(i int) func(*Ramp) error {
 func SetOutVariance(i int) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if i < 7 && i > -7 {
-			c.outVariance = strconv.Itoa(i)
+			c.I2PConfig.OutVariance = strconv.Itoa(i)
 			return nil
 		}
 		return fmt.Errorf("Invalid outbound tunnel variance")
@@ -100,7 +100,7 @@ func SetOutVariance(i int) func(*Ramp) error {
 func SetInQuantity(u int) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if u <= 16 && u > 0 {
-			c.inQuantity = strconv.Itoa(u)
+			c.I2PConfig.InQuantity = strconv.Itoa(u)
 			return nil
 		}
 		return fmt.Errorf("Invalid inbound tunnel quantity")
@@ -111,7 +111,7 @@ func SetInQuantity(u int) func(*Ramp) error {
 func SetOutQuantity(u int) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if u <= 16 && u > 0 {
-			c.outQuantity = strconv.Itoa(u)
+			c.I2PConfig.OutQuantity = strconv.Itoa(u)
 			return nil
 		}
 		return fmt.Errorf("Invalid outbound tunnel quantity")
@@ -122,7 +122,7 @@ func SetOutQuantity(u int) func(*Ramp) error {
 func SetInBackups(u int) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if u < 6 && u >= 0 {
-			c.inBackupQuantity = strconv.Itoa(u)
+			c.I2PConfig.InBackupQuantity = strconv.Itoa(u)
 			return nil
 		}
 		return fmt.Errorf("Invalid inbound tunnel backup quantity")
@@ -133,7 +133,7 @@ func SetInBackups(u int) func(*Ramp) error {
 func SetOutBackups(u int) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if u < 6 && u >= 0 {
-			c.outBackupQuantity = strconv.Itoa(u)
+			c.I2PConfig.OutBackupQuantity = strconv.Itoa(u)
 			return nil
 		}
 		return fmt.Errorf("Invalid outbound tunnel backup quantity")
@@ -144,10 +144,10 @@ func SetOutBackups(u int) func(*Ramp) error {
 func SetEncrypt(b bool) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if b {
-			c.encryptLeaseSet = "true"
+			c.I2PConfig.EncryptLeaseSet = "true"
 			return nil
 		}
-		c.encryptLeaseSet = "false"
+		c.I2PConfig.EncryptLeaseSet = "false"
 		return nil
 	}
 }
@@ -155,7 +155,7 @@ func SetEncrypt(b bool) func(*Ramp) error {
 //SetLeaseSetKey sets the host of the Ramp's SAM bridge
 func SetLeaseSetKey(s string) func(*Ramp) error {
 	return func(c *Ramp) error {
-		c.leaseSetKey = s
+		c.I2PConfig.LeaseSetKey = s
 		return nil
 	}
 }
@@ -163,7 +163,7 @@ func SetLeaseSetKey(s string) func(*Ramp) error {
 //SetLeaseSetPrivateKey sets the host of the Ramp's SAM bridge
 func SetLeaseSetPrivateKey(s string) func(*Ramp) error {
 	return func(c *Ramp) error {
-		c.leaseSetPrivateKey = s
+		c.I2PConfig.LeaseSetPrivateKey = s
 		return nil
 	}
 }
@@ -171,7 +171,7 @@ func SetLeaseSetPrivateKey(s string) func(*Ramp) error {
 //SetLeaseSetPrivateSigningKey sets the host of the Ramp's SAM bridge
 func SetLeaseSetPrivateSigningKey(s string) func(*Ramp) error {
 	return func(c *Ramp) error {
-		c.leaseSetPrivateSigningKey = s
+		c.I2PConfig.LeaseSetPrivateSigningKey = s
 		return nil
 	}
 }
@@ -179,7 +179,7 @@ func SetLeaseSetPrivateSigningKey(s string) func(*Ramp) error {
 //SetMessageReliability sets the host of the Ramp's SAM bridge
 func SetMessageReliability(s string) func(*Ramp) error {
 	return func(c *Ramp) error {
-		c.messageReliability = s
+		c.I2PConfig.MessageReliability = s
 		return nil
 	}
 }
@@ -188,10 +188,10 @@ func SetMessageReliability(s string) func(*Ramp) error {
 func SetAllowZeroIn(b bool) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if b {
-			c.inAllowZeroHop = "true"
+			c.I2PConfig.InAllowZeroHop = "true"
 			return nil
 		}
-		c.inAllowZeroHop = "false"
+		c.I2PConfig.InAllowZeroHop = "false"
 		return nil
 	}
 }
@@ -200,10 +200,10 @@ func SetAllowZeroIn(b bool) func(*Ramp) error {
 func SetAllowZeroOut(b bool) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if b {
-			c.outAllowZeroHop = "true"
+			c.I2PConfig.OutAllowZeroHop = "true"
 			return nil
 		}
-		c.outAllowZeroHop = "false"
+		c.I2PConfig.OutAllowZeroHop = "false"
 		return nil
 	}
 }
@@ -212,10 +212,10 @@ func SetAllowZeroOut(b bool) func(*Ramp) error {
 func SetCompress(b bool) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if b {
-			c.useCompression = "true"
+			c.I2PConfig.UseCompression = "true"
 			return nil
 		}
-		c.useCompression = "false"
+		c.I2PConfig.UseCompression = "false"
 		return nil
 	}
 }
@@ -224,10 +224,10 @@ func SetCompress(b bool) func(*Ramp) error {
 func SetFastRecieve(b bool) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if b {
-			c.fastRecieve = "true"
+			c.I2PConfig.FastRecieve = "true"
 			return nil
 		}
-		c.fastRecieve = "false"
+		c.I2PConfig.FastRecieve = "false"
 		return nil
 	}
 }
@@ -236,10 +236,10 @@ func SetFastRecieve(b bool) func(*Ramp) error {
 func SetReduceIdle(b bool) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if b {
-			c.reduceIdle = "true"
+			c.I2PConfig.ReduceIdle = "true"
 			return nil
 		}
-		c.reduceIdle = "false"
+		c.I2PConfig.ReduceIdle = "false"
 		return nil
 	}
 }
@@ -247,9 +247,9 @@ func SetReduceIdle(b bool) func(*Ramp) error {
 //SetReduceIdleTime sets the time to wait before reducing tunnels to idle levels
 func SetReduceIdleTime(u int) func(*Ramp) error {
 	return func(c *Ramp) error {
-		c.reduceIdleTime = "300000"
+		c.I2PConfig.ReduceIdleTime = "300000"
 		if u >= 6 {
-			c.reduceIdleTime = strconv.Itoa((u * 60) * 1000)
+			c.I2PConfig.ReduceIdleTime = strconv.Itoa((u * 60) * 1000)
 			return nil
 		}
 		return fmt.Errorf("Invalid reduce idle timeout(Measured in minutes) %v", u)
@@ -259,9 +259,9 @@ func SetReduceIdleTime(u int) func(*Ramp) error {
 //SetReduceIdleTimeMs sets the time to wait before reducing tunnels to idle levels in milliseconds
 func SetReduceIdleTimeMs(u int) func(*Ramp) error {
 	return func(c *Ramp) error {
-		c.reduceIdleTime = "300000"
+		c.I2PConfig.ReduceIdleTime = "300000"
 		if u >= 300000 {
-			c.reduceIdleTime = strconv.Itoa(u)
+			c.I2PConfig.ReduceIdleTime = strconv.Itoa(u)
 			return nil
 		}
 		return fmt.Errorf("Invalid reduce idle timeout(Measured in milliseconds) %v", u)
@@ -272,7 +272,7 @@ func SetReduceIdleTimeMs(u int) func(*Ramp) error {
 func SetReduceIdleQuantity(u int) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if u < 5 {
-			c.reduceIdleQuantity = strconv.Itoa(u)
+			c.I2PConfig.ReduceIdleQuantity = strconv.Itoa(u)
 			return nil
 		}
 		return fmt.Errorf("Invalid reduce tunnel quantity")
@@ -283,10 +283,10 @@ func SetReduceIdleQuantity(u int) func(*Ramp) error {
 func SetCloseIdle(b bool) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if b {
-			c.closeIdle = "true"
+			c.I2PConfig.CloseIdle = "true"
 			return nil
 		}
-		c.closeIdle = "false"
+		c.I2PConfig.CloseIdle = "false"
 		return nil
 	}
 }
@@ -294,9 +294,9 @@ func SetCloseIdle(b bool) func(*Ramp) error {
 //SetCloseIdleTime sets the time to wait before closing tunnels to idle levels
 func SetCloseIdleTime(u int) func(*Ramp) error {
 	return func(c *Ramp) error {
-		c.closeIdleTime = "300000"
+		c.I2PConfig.CloseIdleTime = "300000"
 		if u >= 6 {
-			c.closeIdleTime = strconv.Itoa((u * 60) * 1000)
+			c.I2PConfig.CloseIdleTime = strconv.Itoa((u * 60) * 1000)
 			return nil
 		}
 		return fmt.Errorf("Invalid close idle timeout(Measured in minutes) %v", u)
@@ -306,41 +306,41 @@ func SetCloseIdleTime(u int) func(*Ramp) error {
 //SetCloseIdleTimeMs sets the time to wait before closing tunnels to idle levels in milliseconds
 func SetCloseIdleTimeMs(u int) func(*Ramp) error {
 	return func(c *Ramp) error {
-		c.closeIdleTime = "300000"
+		c.I2PConfig.CloseIdleTime = "300000"
 		if u >= 300000 {
-			c.closeIdleTime = strconv.Itoa(u)
+			c.I2PConfig.CloseIdleTime = strconv.Itoa(u)
 			return nil
 		}
 		return fmt.Errorf("Invalid close idle timeout(Measured in milliseconds) %v", u)
 	}
 }
 
-//SetAccessListType tells the system to treat the accessList as a whitelist
+//SetAccessListType tells the system to treat the AccessList as a whitelist
 func SetAccessListType(s string) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if s == "whitelist" {
-			c.accessListType = "whitelist"
+			c.I2PConfig.AccessListType = "whitelist"
 			return nil
 		} else if s == "blacklist" {
-			c.accessListType = "blacklist"
+			c.I2PConfig.AccessListType = "blacklist"
 			return nil
 		} else if s == "none" {
-			c.accessListType = ""
+			c.I2PConfig.AccessListType = ""
 			return nil
 		} else if s == "" {
-			c.accessListType = ""
+			c.I2PConfig.AccessListType = ""
 			return nil
 		}
 		return fmt.Errorf("Invalid Access list type(whitelist, blacklist, none)")
 	}
 }
 
-//SetAccessList tells the system to treat the accessList as a whitelist
+//SetAccessList tells the system to treat the AccessList as a whitelist
 func SetAccessList(s []string) func(*Ramp) error {
 	return func(c *Ramp) error {
 		if len(s) > 0 {
 			for _, a := range s {
-				c.accessList = append(c.accessList, a)
+				c.I2PConfig.AccessList = append(c.I2PConfig.AccessList, a)
 			}
 			return nil
 		}
