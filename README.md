@@ -5,8 +5,7 @@ ramp
 
 *[inclined plane](https://en.wikipedia.org/wiki/Inclined_plane)*
 
-builds upon: [eyedeekay/sam3](https://github.com/eyedeekay/sam3)
-builds upon: [eyedeekay/sam3](https://github.com/eyedeekay/gosam)
+builds upon: [eyedeekay/sam3](https://github.com/eyedeekay/sam3), [eyedeekay/gosam](https://github.com/eyedeekay/gosam)
 
 Convenient structures for managing sam sessions in Go. Some of them might be
 reimplemented in sam3, it's initially intended to make it more intuitive to port
