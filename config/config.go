@@ -1,6 +1,7 @@
 package i2pconfig
 
 import (
+	"strconv"
 	"strings"
 )
 
@@ -17,9 +18,14 @@ type I2PConfig struct {
 	SamMin string
 	SamMax string
 
+	fromPort string
+	toPort   string
+
 	Type string
 
-    SigType                   string
+	DestinationKeys I2PKeys
+
+	SigType                   string
 	EncryptLeaseSet           string
 	LeaseSetKey               string
 	LeaseSetPrivateKey        string
@@ -48,6 +54,17 @@ type I2PConfig struct {
 	AccessList     []string
 }
 
+func (f I2PConfig) ID() string {
+	if f.TunName != "" {
+		return f.TunName
+	}
+	b := make([]byte, 12)
+	for i := range b {
+		b[i] = "abcdefghijklmnopqrstuvwxyz"[rand.Intn(len("abcdefghijklmnopqrstuvwxyz"))]
+	}
+	return string(b)
+}
+
 func (f I2PConfig) Leasesetsettings() (string, string, string) {
 	var r, s, t string
 	if f.LeaseSetKey != "" {
@@ -60,6 +77,51 @@ func (f I2PConfig) Leasesetsettings() (string, string, string) {
 		t = "i2cp.leaseSetPrivateSigningKey=" + f.LeaseSetPrivateSigningKey
 	}
 	return r, s, t
+}
+
+func (f I2PConfig) FromPort() string {
+	if f.samMax() < 3.1 {
+		return ""
+	}
+	if f.fromPort != "" {
+		return "FROM_PORT=" + f.fromPort
+	}
+	return ""
+}
+
+func (f I2PConfig) ToPort() string {
+	if f.samMax() < 3.1 {
+		return ""
+	}
+	if f.fromPort != "" {
+		return "TO_PORT=" + f.toPort
+	}
+	return ""
+}
+
+func (f I2PConfig) samMax() float64 {
+	i, err := strconv.Atoi(f.SamMax)
+	if err != nil {
+		return 3.1
+	}
+	return float64(i)
+}
+
+func (f I2PConfig) DestinationKey() string {
+	if &f.DestinationKeys != nil {
+		return f.DestinationKeys.String()
+	}
+	return "TRANSIENT"
+}
+
+func (f I2PConfig) SignatureType() string {
+	if f.samMax() < 3.1 {
+		return ""
+	}
+	if f.SigType != "" {
+		return "SIGNATURE_TYPE=" + f.SigType
+	}
+	return ""
 }
 
 func (f I2PConfig) Print() []string {
@@ -119,7 +181,7 @@ func NewConfig(opts ...func(*I2PConfig) error) (*I2PConfig, error) {
 	config.SamPort = "7656"
 	config.SamMin = "3.0"
 	config.SamMax = "3.1"
-	config.TunName = "Ramp"
+	config.TunName = ""
 	config.Type = "server"
 	config.InLength = "3"
 	config.OutLength = "3"

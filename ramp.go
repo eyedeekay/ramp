@@ -32,15 +32,15 @@ func NewRamp(opts ...func(*Ramp) error) (*Ramp, error) {
 	if ramp.save {
 		log.Println("Saving i2p keys")
 	}
-	if ramp.SamKeys, err = i2pkeyramp.Load(ramp.FilePath, ramp.TunName, ramp.passfile, ramp.samConn, ramp.save); err != nil {
+	if ramp.SamKeys, err = i2pkeyramp.Load(ramp.FilePath, ramp.ID(), ramp.passfile, ramp.samConn, ramp.save); err != nil {
 		return nil, err
 	}*/
-	log.Println("Destination keys generated, tunnel name:", ramp.TunName)
+	log.Println("Destination keys generated, tunnel name:", ramp.ID())
 	/*if ramp.save {
-		if err := i2pkeyramp.Save(ramp.FilePath, ramp.TunName, ramp.passfile, ramp.SamKeys); err != nil {
+		if err := i2pkeyramp.Save(ramp.FilePath, ramp.ID(), ramp.passfile, ramp.SamKeys); err != nil {
 			return nil, err
 		}
-		log.Println("Saved tunnel keys for", ramp.TunName)
+		log.Println("Saved tunnel keys for", ramp.ID())
 	}*/
 	return &ramp, nil
 }

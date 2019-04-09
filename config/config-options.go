@@ -44,6 +44,36 @@ func SetConfigSAMPort(s string) func(*I2PConfig) error {
 	}
 }
 
+//SetConfigFromPort sets the FROM_PORT propert to pass to SAM
+func SetConfigFromPort(s string) func(*I2PConfig) error {
+	return func(c *I2PConfig) error {
+		port, err := strconv.Atoi(s)
+		if err != nil {
+			return fmt.Errorf("Invalid FROM Port %s; non-number", s)
+		}
+		if port < 65536 && port > -1 {
+			c.fromPort = s
+			return nil
+		}
+		return fmt.Errorf("Invalid port")
+	}
+}
+
+//SetConfigToPort sets the TO_PORT property to pass to SAM
+func SetConfigToPort(s string) func(*I2PConfig) error {
+	return func(c *I2PConfig) error {
+		port, err := strconv.Atoi(s)
+		if err != nil {
+			return fmt.Errorf("Invalid SAM Port %s; non-number", s)
+		}
+		if port < 65536 && port > -1 {
+			c.toPort = s
+			return nil
+		}
+		return fmt.Errorf("Invalid port")
+	}
+}
+
 //SetConfigName sets the host of the I2PConfig's SAM bridge
 func SetConfigName(s string) func(*I2PConfig) error {
 	return func(c *I2PConfig) error {
