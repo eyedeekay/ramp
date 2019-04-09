@@ -8,6 +8,7 @@ import (
 	. "github.com/eyedeekay/sam3"
 )
 
+// I2PConfig is a struct which manages I2P configuration options
 type I2PConfig struct {
 	SamHost string
 	SamPort string
@@ -106,4 +107,40 @@ func (f I2PConfig) Accesslist() string {
 		return "i2cp.accessList=" + strings.TrimSuffix(r, ",")
 	}
 	return ""
+}
+
+func NewConfig(opts ...func(*I2PConfig) error) (*I2PConfig, error) {
+	var config I2PConfig
+	config.SamHost = "127.0.0.1"
+	config.SamPort = "7656"
+	config.TunName = "Ramp"
+	config.Type = "server"
+	config.InLength = "3"
+	config.OutLength = "3"
+	config.InQuantity = "2"
+	config.OutQuantity = "2"
+	config.InVariance = "1"
+	config.OutVariance = "1"
+	config.InBackupQuantity = "3"
+	config.OutBackupQuantity = "3"
+	config.InAllowZeroHop = "false"
+	config.OutAllowZeroHop = "false"
+	config.EncryptLeaseSet = "false"
+	config.LeaseSetKey = ""
+	config.LeaseSetPrivateKey = ""
+	config.LeaseSetPrivateSigningKey = ""
+	config.FastRecieve = "false"
+	config.UseCompression = "true"
+	config.ReduceIdle = "false"
+	config.ReduceIdleTime = "15"
+	config.ReduceIdleQuantity = "4"
+	config.CloseIdle = "false"
+	config.CloseIdleTime = "300000"
+	config.MessageReliability = "none"
+	for _, o := range opts {
+		if err := o(&config); err != nil {
+			return nil, err
+		}
+	}
+	return &config, nil
 }

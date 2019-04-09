@@ -1,8 +1,12 @@
-# ramp
+ramp
+====
 
 *[allium tricoccum](https://en.wikipedia.org/wiki/Allium_tricoccum)*
 
 *[inclined plane](https://en.wikipedia.org/wiki/Inclined_plane)*
+
+builds upon: [eyedeekay/sam3](https://github.com/eyedeekay/sam3)
+builds upon: [eyedeekay/sam3](https://github.com/eyedeekay/gosam)
 
 Convenient structures for managing sam sessions in Go. Some of them might be
 reimplemented in sam3, it's initially intended to make it more intuitive to port
@@ -14,6 +18,14 @@ saving keys, which are in turn not compatible with i2ptunnel, the
 more-tedious-than-it-needs-to-be keeping track of configuration options, full
 support for Contexts, etc.
 
+Directory Structure
+-------------------
+
         ./        : Base Ramp classes, the things most will need to use
         ./config  : Configuration classes to deal with compatibility issues
         ./emit    : Takes a config file and uses it to send SAM commands
+
+Goals
+-----
+
+Make gosam and sam3 share a common(optional) configuration class
