@@ -33,4 +33,6 @@ Goals
     from sam3
   3. Make sam3 configuration much more intuitive, require less user input to
     create a session
-  4. Have lots of examples and documentation
+  4. Make gosam and sam3 configurable from files without adding clutter to their
+    code
+  5. Have lots of examples and documentation

@@ -14,6 +14,9 @@ type I2PConfig struct {
 	SamPort string
 	TunName string
 
+    SamMin string
+    samMax string
+
 	Type string
 
 	EncryptLeaseSet           string
