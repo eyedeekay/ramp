@@ -3,6 +3,7 @@ package i2pconfig
 import (
 	"fmt"
 	"strconv"
+    "strings"
 )
 
 //Option is a I2PConfig Option
@@ -19,6 +20,21 @@ func SetConfigType(s string) func(*I2PConfig) error {
 			return nil
 		}
 	}
+}
+
+// SetSAMAddress
+func SetSAMAddress(s string) func(*I2PConfig) error {
+	return func(c *I2PConfig) error {
+        sp := strings.Split(s, ":")
+        if len(sp) > 2 {
+            return fmt.Errorf("Invalid address string: %s", sp)
+        }
+        if len(sp) == 2 {
+            c.SamPort = sp[1]
+        }
+        c.SamHost = sp[0]
+        return nil
+    }
 }
 
 //SetConfigSAMHost sets the host of the I2PConfig's SAM bridge
@@ -52,7 +68,7 @@ func SetConfigFromPort(s string) func(*I2PConfig) error {
 			return fmt.Errorf("Invalid FROM Port %s; non-number", s)
 		}
 		if port < 65536 && port > -1 {
-			c.fromPort = s
+			c.Fromport = s
 			return nil
 		}
 		return fmt.Errorf("Invalid port")
@@ -67,7 +83,7 @@ func SetConfigToPort(s string) func(*I2PConfig) error {
 			return fmt.Errorf("Invalid SAM Port %s; non-number", s)
 		}
 		if port < 65536 && port > -1 {
-			c.toPort = s
+			c.Toport = s
 			return nil
 		}
 		return fmt.Errorf("Invalid port")

@@ -21,8 +21,9 @@ Directory Structure
 -------------------
 
         ./         : Base Ramp classes, the things most will need to use
-        ./config   : Configuration classes to deal with compatibility issues
-        ./emit     : Takes a config file and uses it to send SAM commands
+        ./config   : Configuration structures to deal with compatibility issues
+        ./consume  : Handle replies from the SAM bridge
+        ./emit     : Takes a stored configuration and uses it to send SAM commands
         ./examples : Usage examples
         ./sam3     : Functional sam3 constructors
 
@@ -36,4 +37,6 @@ Goals
     create a session
   4. Make gosam and sam3 configurable from files without adding clutter to their
     code
-  5. Have lots of examples and documentation
+  5. Be a useful underlying primitive for custom/application specific SAM
+    interactions and a toolkit for developing new libraries
+  6. Have lots of examples and documentation

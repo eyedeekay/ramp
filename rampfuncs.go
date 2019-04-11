@@ -1,21 +1,21 @@
 package ramp
 
 func (f Ramp) sam() string {
-	return f.SamHost + ":" + f.SamPort
+	return f.SAM.Config.I2PConfig.Sam()
 }
 
 func (f Ramp) leasesetsettings() (string, string, string) {
-	return f.I2PConfig.Leasesetsettings()
+	return f.SAM.Config.I2PConfig.Leasesetsettings()
 }
 
 func (f Ramp) print() []string {
-	return f.I2PConfig.Print()
+	return f.SAM.Config.I2PConfig.Print()
 }
 
 func (f Ramp) accesslisttype() string {
-	return f.I2PConfig.Accesslisttype()
+	return f.SAM.Config.I2PConfig.Accesslisttype()
 }
 
 func (f Ramp) accesslist() string {
-	return f.I2PConfig.Accesslist()
+	return f.SAM.Config.I2PConfig.Accesslist()
 }

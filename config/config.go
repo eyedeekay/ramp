@@ -1,12 +1,13 @@
 package i2pconfig
 
 import (
+	"math/rand"
 	"strconv"
 	"strings"
 )
 
 import (
-	. "github.com/eyedeekay/sam3"
+	. "github.com/eyedeekay/sam3/i2pkeys"
 )
 
 // I2PConfig is a struct which manages I2P configuration options
@@ -18,12 +19,12 @@ type I2PConfig struct {
 	SamMin string
 	SamMax string
 
-	fromPort string
-	toPort   string
+	Fromport string
+	Toport   string
 
 	Type string
 
-	DestinationKeys I2PKeys
+	DestinationKeys *I2PKeys
 
 	SigType                   string
 	EncryptLeaseSet           string
@@ -54,7 +55,31 @@ type I2PConfig struct {
 	AccessList     []string
 }
 
-func (f I2PConfig) ID() string {
+func (f *I2PConfig) Sam() string {
+	host := "127.0.0.1"
+	port := "7656"
+	if f.SamHost != "" {
+		host = f.SamHost
+	}
+	if f.SamPort != "" {
+		port = f.SamPort
+	}
+	return host + ":" + port
+}
+
+func (f *I2PConfig) SetSAMAddress(addr string) {
+	hp := strings.Split(addr, ":")
+	if len(hp) == 1 {
+		f.SamHost = hp[0]
+	} else if len(hp) == 2 {
+		f.SamPort = hp[1]
+		f.SamHost = hp[0]
+	}
+	f.SamPort = "7656"
+	f.SamHost = "127.0.0.1"
+}
+
+func (f *I2PConfig) ID() string {
 	if f.TunName != "" {
 		return f.TunName
 	}
@@ -65,7 +90,7 @@ func (f I2PConfig) ID() string {
 	return string(b)
 }
 
-func (f I2PConfig) Leasesetsettings() (string, string, string) {
+func (f *I2PConfig) Leasesetsettings() (string, string, string) {
 	var r, s, t string
 	if f.LeaseSetKey != "" {
 		r = "i2cp.leaseSetKey=" + f.LeaseSetKey
@@ -79,27 +104,27 @@ func (f I2PConfig) Leasesetsettings() (string, string, string) {
 	return r, s, t
 }
 
-func (f I2PConfig) FromPort() string {
+func (f *I2PConfig) FromPort() string {
 	if f.samMax() < 3.1 {
 		return ""
 	}
-	if f.fromPort != "" {
-		return "FROM_PORT=" + f.fromPort
+	if f.Fromport != "" {
+		return "FROM_PORT=" + f.Fromport
 	}
 	return ""
 }
 
-func (f I2PConfig) ToPort() string {
+func (f *I2PConfig) ToPort() string {
 	if f.samMax() < 3.1 {
 		return ""
 	}
-	if f.fromPort != "" {
-		return "TO_PORT=" + f.toPort
+	if f.Toport != "" {
+		return "TO_PORT=" + f.Toport
 	}
 	return ""
 }
 
-func (f I2PConfig) samMax() float64 {
+func (f *I2PConfig) samMax() float64 {
 	i, err := strconv.Atoi(f.SamMax)
 	if err != nil {
 		return 3.1
@@ -107,14 +132,28 @@ func (f I2PConfig) samMax() float64 {
 	return float64(i)
 }
 
-func (f I2PConfig) DestinationKey() string {
+func (f *I2PConfig) MinSAM() string {
+	if f.SamMin == "" {
+		return "3.0"
+	}
+	return f.SamMin
+}
+
+func (f *I2PConfig) MaxSAM() string {
+	if f.SamMax == "" {
+		return "3.1"
+	}
+	return f.SamMax
+}
+
+func (f *I2PConfig) DestinationKey() string {
 	if &f.DestinationKeys != nil {
 		return f.DestinationKeys.String()
 	}
 	return "TRANSIENT"
 }
 
-func (f I2PConfig) SignatureType() string {
+func (f *I2PConfig) SignatureType() string {
 	if f.samMax() < 3.1 {
 		return ""
 	}
@@ -124,7 +163,7 @@ func (f I2PConfig) SignatureType() string {
 	return ""
 }
 
-func (f I2PConfig) Print() []string {
+func (f *I2PConfig) Print() []string {
 	lsk, lspk, lspsk := f.Leasesetsettings()
 	return []string{
 		//f.targetForPort443(),
@@ -153,7 +192,7 @@ func (f I2PConfig) Print() []string {
 	}
 }
 
-func (f I2PConfig) Accesslisttype() string {
+func (f *I2PConfig) Accesslisttype() string {
 	if f.AccessListType == "whitelist" {
 		return "i2cp.enableAccessList=true"
 	} else if f.AccessListType == "blacklist" {
@@ -164,7 +203,7 @@ func (f I2PConfig) Accesslisttype() string {
 	return ""
 }
 
-func (f I2PConfig) Accesslist() string {
+func (f *I2PConfig) Accesslist() string {
 	if f.AccessListType != "" && len(f.AccessList) > 0 {
 		r := ""
 		for _, s := range f.AccessList {
