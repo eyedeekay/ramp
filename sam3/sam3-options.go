@@ -16,7 +16,7 @@ type Option func(*SAM) error
 //SetType sets the type of the forwarder server
 func SetType(s string) func(*SAM) error {
 	return func(c *SAM) error {
-		if s == "http" {
+		if s == "client" {
 			c.Config.I2PConfig.Type = s
 			return nil
 		} else {
