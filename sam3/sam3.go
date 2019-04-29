@@ -28,7 +28,7 @@ func NewSAMOpts(opts ...func(*SAM) error) (*SAM, error) {
 					sam.Config.I2PConfig.DestinationKeys = nil
 					sam.Resolver, err = NewSAMResolver(&sam)
 					if err == nil {
-    					return &sam, nil
+						return &sam, nil
 					}
 				} else if string(buf[:n]) == "HELLO REPLY RESULT=NOVERSION\n" {
 					err = fmt.Errorf("That SAM bridge does not support SAMv3.")

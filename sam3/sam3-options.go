@@ -3,7 +3,7 @@ package sam3
 import (
 	"fmt"
 	"strconv"
-    "strings"
+	"strings"
 )
 
 import (
