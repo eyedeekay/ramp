@@ -9,16 +9,27 @@ import (
 //Option is a I2PConfig Option
 type ConfigOption func(*I2PConfig) error
 
+func SetTunType(s string) func (*I2PConfig) error {
+    return func(c *I2PConfig) error {
+        c.TunType = s
+        return nil
+    }
+}
+
 //SetConfigType sets the type of the forwarder server
-func SetConfigType(s string) func(*I2PConfig) error {
+func SetConfigStyle(s string) func(*I2PConfig) error {
 	return func(c *I2PConfig) error {
-		if s == "http" {
-			c.Type = s
+		if s == "STREAM" {
+			c.Style = s
 			return nil
-		} else {
-			c.Type = "server"
+		} else if s == "DATAGRAM" {
+			c.Style = s
 			return nil
-		}
+		}else if s == "RAW" {
+            c.Style = s
+            return nil
+        }
+        return fmt.Errorf("Invalid session STYLE=%s, must be STREAM, DATAGRAM, or RAW")
 	}
 }
 

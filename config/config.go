@@ -22,9 +22,10 @@ type I2PConfig struct {
 	Fromport string
 	Toport   string
 
-	Type string
+	Style string
+    TunType string
 
-	DestinationKeys *I2PKeys
+	DestinationKeys I2PKeys
 
 	SigType                   string
 	EncryptLeaseSet           string
@@ -80,26 +81,26 @@ func (f *I2PConfig) SetSAMAddress(addr string) {
 }
 
 func (f *I2PConfig) ID() string {
-	if f.TunName != "" {
-		return f.TunName
+	if f.TunName == "" {
+		b := make([]byte, 12)
+        for i := range b {
+            b[i] = "abcdefghijklmnopqrstuvwxyz"[rand.Intn(len("abcdefghijklmnopqrstuvwxyz"))]
+        }
+        f.TunName = string(b)
 	}
-	b := make([]byte, 12)
-	for i := range b {
-		b[i] = "abcdefghijklmnopqrstuvwxyz"[rand.Intn(len("abcdefghijklmnopqrstuvwxyz"))]
-	}
-	return string(b)
+    return " ID=" + f.TunName + " "
 }
 
 func (f *I2PConfig) Leasesetsettings() (string, string, string) {
 	var r, s, t string
 	if f.LeaseSetKey != "" {
-		r = "i2cp.leaseSetKey=" + f.LeaseSetKey
+		r = " i2cp.leaseSetKey=" + f.LeaseSetKey + " "
 	}
 	if f.LeaseSetPrivateKey != "" {
-		s = "i2cp.leaseSetPrivateKey=" + f.LeaseSetPrivateKey
+		s = " i2cp.leaseSetPrivateKey=" + f.LeaseSetPrivateKey + " "
 	}
 	if f.LeaseSetPrivateSigningKey != "" {
-		t = "i2cp.leaseSetPrivateSigningKey=" + f.LeaseSetPrivateSigningKey
+		t = " i2cp.leaseSetPrivateSigningKey=" + f.LeaseSetPrivateSigningKey + " "
 	}
 	return r, s, t
 }
@@ -108,8 +109,8 @@ func (f *I2PConfig) FromPort() string {
 	if f.samMax() < 3.1 {
 		return ""
 	}
-	if f.Fromport != "" {
-		return "FROM_PORT=" + f.Fromport
+	if f.Fromport != "0" {
+		return " FROM_PORT=" + f.Fromport + " "
 	}
 	return ""
 }
@@ -118,10 +119,17 @@ func (f *I2PConfig) ToPort() string {
 	if f.samMax() < 3.1 {
 		return ""
 	}
-	if f.Toport != "" {
-		return "TO_PORT=" + f.Toport
+	if f.Toport != "0" {
+		return " TO_PORT=" + f.Toport + " "
 	}
 	return ""
+}
+
+func (f *I2PConfig) SessionStyle() string {
+    if f.Style != "" {
+        return " STYLE=" + f.Style + " "
+    }
+    return " STYLE=STREAM "
 }
 
 func (f *I2PConfig) samMax() float64 {
@@ -148,9 +156,9 @@ func (f *I2PConfig) MaxSAM() string {
 
 func (f *I2PConfig) DestinationKey() string {
 	if &f.DestinationKeys != nil {
-		return f.DestinationKeys.String()
+		return " DESTINATION=" + f.DestinationKeys.String() + " "
 	}
-	return "TRANSIENT"
+	return " DESTINATION=TRANSIENT "
 }
 
 func (f *I2PConfig) SignatureType() string {
@@ -158,11 +166,52 @@ func (f *I2PConfig) SignatureType() string {
 		return ""
 	}
 	if f.SigType != "" {
-		return "SIGNATURE_TYPE=" + f.SigType
+		return " SIGNATURE_TYPE=" + f.SigType + " "
 	}
 	return ""
 }
 
+func (f *I2PConfig) EncryptLease() string {
+    if f.EncryptLeaseSet == "true" {
+        return " i2cp.encryptLeaseSet=true "
+    }
+    return ""
+}
+
+func (f *I2PConfig) Reliability() string {
+    if f.MessageReliability != "" {
+        return " i2cp.messageReliability=" + f.MessageReliability + " "
+    }
+    return ""
+}
+
+func (f *I2PConfig) Reduce() string {
+    if f.ReduceIdle == "true" {
+        return "i2cp.reduceOnIdle=" + f.ReduceIdle + "i2cp.reduceIdleTime=" + f.ReduceIdleTime + "i2cp.reduceQuantity=" + f.ReduceIdleQuantity
+    }
+    return ""
+}
+
+func (f *I2PConfig) Close() string {
+    if f.CloseIdle == "true" {
+		return "i2cp.closeOnIdle=" + f.CloseIdle + "i2cp.closeIdleTime=" + f.CloseIdleTime
+    }
+    return ""
+}
+
+func (f *I2PConfig) DoZero() string {
+    r := ""
+    if f.InAllowZeroHop == "true" {
+        r += " inbound.allowZeroHop=" + f.InAllowZeroHop + " "
+    }
+    if f.OutAllowZeroHop == "true" {
+        r += " outbound.allowZeroHop= " + f.OutAllowZeroHop + " "
+    }
+    if f.FastRecieve == "true" {
+        r += " " + f.FastRecieve + " "
+    }
+    return r
+}
 func (f *I2PConfig) Print() []string {
 	lsk, lspk, lspsk := f.Leasesetsettings()
 	return []string{
@@ -175,17 +224,13 @@ func (f *I2PConfig) Print() []string {
 		"outbound.backupQuantity=" + f.OutBackupQuantity,
 		"inbound.quantity=" + f.InQuantity,
 		"outbound.quantity=" + f.OutQuantity,
-		"inbound.allowZeroHop=" + f.InAllowZeroHop,
-		"outbound.allowZeroHop=" + f.OutAllowZeroHop,
-		"i2cp.fastRecieve=" + f.FastRecieve,
+		f.DoZero(),
+		//"i2cp.fastRecieve=" + f.FastRecieve,
 		"i2cp.gzip=" + f.UseCompression,
-		"i2cp.reduceOnIdle=" + f.ReduceIdle,
-		"i2cp.reduceIdleTime=" + f.ReduceIdleTime,
-		"i2cp.reduceQuantity=" + f.ReduceIdleQuantity,
-		"i2cp.closeOnIdle=" + f.CloseIdle,
-		"i2cp.closeIdleTime=" + f.CloseIdleTime,
-		"i2cp.messageReliability" + f.MessageReliability,
-		"i2cp.encryptLeaseSet=" + f.EncryptLeaseSet,
+        f.Reduce(),
+        f.Close(),
+		f.Reliability(),
+		f.EncryptLease(),
 		lsk, lspk, lspsk,
 		f.Accesslisttype(),
 		f.Accesslist(),
@@ -219,9 +264,10 @@ func NewConfig(opts ...func(*I2PConfig) error) (*I2PConfig, error) {
 	config.SamHost = "127.0.0.1"
 	config.SamPort = "7656"
 	config.SamMin = "3.0"
-	config.SamMax = "3.1"
+	config.SamMax = "3.2"
 	config.TunName = ""
-	config.Type = "server"
+	config.TunType = "server"
+    config.Style = "STREAM"
 	config.InLength = "3"
 	config.OutLength = "3"
 	config.InQuantity = "2"

@@ -12,13 +12,17 @@ type Option func(*SAMEmit) error
 //SetType sets the type of the forwarder server
 func SetType(s string) func(*SAMEmit) error {
 	return func(c *SAMEmit) error {
-		if s == "client" {
-			c.I2PConfig.Type = s
+		if s == "STREAM" {
+			c.Style = s
 			return nil
-		} else {
-			c.I2PConfig.Type = "server"
+		} else if s == "DATAGRAM" {
+			c.Style = s
 			return nil
-		}
+		}else if s == "RAW" {
+            c.Style = s
+            return nil
+        }
+        return fmt.Errorf("Invalid session STYLE=%s, must be STREAM, DATAGRAM, or RAW")
 	}
 }
 
